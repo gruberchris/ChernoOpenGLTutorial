@@ -121,6 +121,8 @@ int main()
         glfwPollEvents();
     }
 
+    glDeleteProgram(shader.getProgramID());
+
     // Close OpenGL window and terminate GLFW
     glfwTerminate();
     return 0;
