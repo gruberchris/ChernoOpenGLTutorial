@@ -14,17 +14,17 @@ public:
     Shader(const std::string& vertexPath, const std::string& fragmentPath);
 
     // Use the current shader
-    void use();
+    void use() const;
 
     // Utility functions
-    GLuint getProgramID() const;
+    [[nodiscard]] GLuint getProgramID() const;
 
 private:
     // Program ID
     GLuint programID;
 
     // Utility function for checking shader compilation/linking errors.
-    void checkCompileErrors(GLuint shader, const std::string& type);
+    static void checkCompileErrors(GLuint shader, const std::string& type);
 };
 
 #endif //CHERNOOPENGLTUTORIAL_SHADER_H
