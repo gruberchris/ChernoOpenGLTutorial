@@ -116,7 +116,6 @@ int main()
         glfwPollEvents();
     }
 
-
     // Close OpenGL window and terminate GLFW
     glfwTerminate();
 
