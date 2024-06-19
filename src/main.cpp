@@ -9,6 +9,8 @@
 // Include GLFW
 #include <GLFW/glfw3.h>
 
+#include "Shader.h"
+
 void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -92,6 +94,9 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    // Load shaders
+    Shader shader("shaders/vertex/vertex.glsl", "shaders/fragment/fragment.glsl");
+
     // Check if the ESC key was pressed or the window was closed
     while(!glfwWindowShouldClose(window))
     {
@@ -101,11 +106,14 @@ int main()
         // Render here
         glClear(GL_COLOR_BUFFER_BIT);
 
+        // Use the shader
+        shader.use();
+
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         // check and call events and swap the buffers
-        glfwPollEvents();
         glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
 

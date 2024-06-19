@@ -20,12 +20,13 @@ message(STATUS "GLEW_INCLUDE_DIRS = ${GLEW_INCLUDE_DIRS}")
 message(STATUS "GLEW_LIBRARIES = ${GLEW_LIBRARIES}")
 
 # Collect all source files in src directory
-file(GLOB SOURCE_FILES "src/*.cpp" "src/glad.c")
+file(GLOB SOURCE_FILES "src/*.cpp")
 
 # Include directories from environment variables
 include_directories(
         $ENV{GLFW_INCLUDE_DIRS}
         $ENV{GLEW_INCLUDE_DIRS}
+        ${CMAKE_SOURCE_DIR}/include
 )
 
 # Add the executable
@@ -51,3 +52,14 @@ endif()
 #add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 #        COMMAND ${CMAKE_COMMAND} -E copy_directory
 #        ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders)
+
+# Define shader files
+file(GLOB SHADERS
+        "${PROJECT_SOURCE_DIR}/shaders/vertex/*.vert"
+        "${PROJECT_SOURCE_DIR}/shaders/fragment/*.frag"
+        "${PROJECT_SOURCE_DIR}/shaders/geometry/*.geom"
+)
+
+# Add an install target to copy shaders
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
+install(FILES ${SHADERS} DESTINATION shaders)
