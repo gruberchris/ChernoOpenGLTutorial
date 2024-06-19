@@ -49,15 +49,15 @@ if(APPLE AND CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
 endif()
 
 # Copy the shaders directory to the output directory
-#add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-#        COMMAND ${CMAKE_COMMAND} -E copy_directory
-#        ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders)
 
 # Define shader files
 file(GLOB SHADERS
-        "${PROJECT_SOURCE_DIR}/shaders/vertex/*.vert"
-        "${PROJECT_SOURCE_DIR}/shaders/fragment/*.frag"
-        "${PROJECT_SOURCE_DIR}/shaders/geometry/*.geom"
+        "${PROJECT_SOURCE_DIR}/shaders/vertex/*.glsl"
+        "${PROJECT_SOURCE_DIR}/shaders/fragment/*.glsl"
+        "${PROJECT_SOURCE_DIR}/shaders/geometry/*.glsl"
 )
 
 # Add an install target to copy shaders

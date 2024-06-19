@@ -1,6 +1,5 @@
 // Include standard headers
 #include <array>
-#include <cstdio>
 #include <iostream>
 
 // Include GLEW
@@ -23,27 +22,19 @@ int main()
     if(!glfwInit())
     {
         std::cerr << "Failed to initialize GLFW" << std::endl;
-        getchar();
         return -1;
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4);
-
-    // try to initialize OpenGL 4.1
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-
-    // To make macOS happy; should not be needed
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Open a window and create its OpenGL context
     GLFWwindow* window = glfwCreateWindow( 1024, 768, "Cherno OpenGL Tutorial", nullptr, nullptr);
-
     if( window == nullptr ){
         std::cerr << "Failed to open GLFW window. Check the OpenGL hints." << std::endl;
-        getchar();
         glfwTerminate();
         return -1;
     }
@@ -58,7 +49,6 @@ int main()
     glewExperimental = true; // Needed for core profile
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW" << std::endl;
-        getchar();
         glfwTerminate();
         return -1;
     }
@@ -73,11 +63,17 @@ int main()
 
     // Create a vertex array object of vertices to draw
     std::array<float, 6> positions = {
+            -0.5f, -0.5f,
             0.0f, 0.5f,
             0.5f, -0.5f,
-            -0.5f, -0.5f,
     };
 
+    // Create a vertex array object (vao) to store the vertices
+    unsigned int vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    // Create a vertex buffer object (vbo) to store the vertices
     unsigned int buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -92,10 +88,15 @@ int main()
     // stride is 2 * sizeof(float) because each vertex is 2 floats
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
     // Load shaders
     Shader shader("shaders/vertex/vertex.glsl", "shaders/fragment/fragment.glsl");
+
+    // Check if the shaders compiled. This isn't necessary, just here for debugging
+    if (!shader.isCompiled()) {
+        std::cerr << "Failed to compile shaders" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
 
     // Check if the ESC key was pressed or the window was closed
     while(!glfwWindowShouldClose(window))
@@ -109,6 +110,10 @@ int main()
         // Use the shader
         shader.use();
 
+        // Bind the vertex array object
+        glBindVertexArray(vao);
+
+        // Draw the triangle
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         // check and call events and swap the buffers
@@ -118,6 +123,5 @@ int main()
 
     // Close OpenGL window and terminate GLFW
     glfwTerminate();
-
     return 0;
 }

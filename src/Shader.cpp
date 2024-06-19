@@ -45,31 +45,28 @@ Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath) {
     const char* fShaderCode = fragmentCode.c_str();
 
     // 2. Compile shaders
-    GLuint vertex;
-    GLuint fragment;
-
     // Vertex Shader
-    vertex = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex, 1, &vShaderCode, nullptr);
-    glCompileShader(vertex);
-    checkCompileErrors(vertex, "VERTEX");
+    vertexID = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexID, 1, &vShaderCode, nullptr);
+    glCompileShader(vertexID);
+    checkCompileErrors(vertexID, "VERTEX");
 
     // Fragment Shader
-    fragment = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment, 1, &fShaderCode, nullptr);
-    glCompileShader(fragment);
-    checkCompileErrors(fragment, "FRAGMENT");
+    fragmentID = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentID, 1, &fShaderCode, nullptr);
+    glCompileShader(fragmentID);
+    checkCompileErrors(fragmentID, "FRAGMENT");
 
     // Shader Program
     programID = glCreateProgram();
-    glAttachShader(programID, vertex);
-    glAttachShader(programID, fragment);
+    glAttachShader(programID, vertexID);
+    glAttachShader(programID, fragmentID);
     glLinkProgram(programID);
     checkCompileErrors(programID, "PROGRAM");
 
-    // Delete the shaders as they're linked into our program now and no longer necessery
-    glDeleteShader(vertex);
-    glDeleteShader(fragment);
+    // Delete the shaders as they're linked into our program now and no longer necessary
+    glDeleteShader(vertexID);
+    glDeleteShader(fragmentID);
 }
 
 // Use the current shader
@@ -99,4 +96,24 @@ void Shader::checkCompileErrors(GLuint shader, const std::string& type) {
 
 GLuint Shader::getProgramID() const {
     return programID;
+}
+
+bool Shader::isCompiled() const {
+    GLint success;
+    GLchar infoLog[512];
+    glGetShaderiv(vertexID, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(vertexID, 512, nullptr, infoLog);
+        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+        return false;
+    }
+    glGetShaderiv(fragmentID, GL_COMPILE_STATUS, &success);
+    if (!success)
+    {
+        glGetShaderInfoLog(fragmentID, 512, nullptr, infoLog);
+        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+        return false;
+    }
+    return true;
 }

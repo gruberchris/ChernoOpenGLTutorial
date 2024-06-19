@@ -19,9 +19,14 @@ public:
     // Utility functions
     [[nodiscard]] GLuint getProgramID() const;
 
+    [[nodiscard]] bool isCompiled() const;
+
 private:
     // Program ID
     GLuint programID;
+
+    GLuint vertexID;
+    GLuint fragmentID;
 
     // Utility function for checking shader compilation/linking errors.
     static void checkCompileErrors(GLuint shader, const std::string& type);
