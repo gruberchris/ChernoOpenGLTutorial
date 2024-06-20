@@ -1,6 +1,7 @@
 // Include standard headers
 #include <array>
 #include <iostream>
+#include <source_location>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -14,6 +15,19 @@ void processInput(GLFWwindow *window)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+}
+
+void clearOpenGlErrors()
+{
+    while(glGetError() != GL_NO_ERROR);
+}
+
+void checkOpenGLErrors(const char* function, const char* file, int line)
+{
+    while(GLenum error = glGetError())
+    {
+        std::cerr << "[OpenGL Error] (" << error << "): " << function << " " << file << ":" << line << std::endl;
+    }
 }
 
 int main()
@@ -126,9 +140,16 @@ int main()
         // Bind the vertex array object
         glBindVertexArray(vao);
 
-        // Draw the triangle
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        // Clear any OpenGL errors
+        clearOpenGlErrors();
+
+        // Draw
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+        // Check for OpenGL errors
+        checkOpenGLErrors(std::source_location::current().function_name(),
+                          std::source_location::current().file_name(),
+                          std::source_location::current().line());
 
         // check and call events and swap the buffers
         glfwSwapBuffers(window);
