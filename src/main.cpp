@@ -62,10 +62,17 @@ int main()
     glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
     // Create a vertex array object of vertices to draw
-    std::array<float, 6> positions = {
+    std::array<float, 8> positions = {
             -0.5f, -0.5f,
-            0.0f, 0.5f,
             0.5f, -0.5f,
+            0.5f, 0.5f,
+            -0.5f, 0.5f,
+    };
+
+    // Create an array of indices to draw the vertices using an index buffer
+    std::array<unsigned int, 6> indices = {
+            0, 1, 2,
+            2, 3, 0
     };
 
     // Create a vertex array object (vao) to store the vertices
@@ -77,7 +84,7 @@ int main()
     unsigned int buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), &positions, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), &positions, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
 
@@ -87,6 +94,12 @@ int main()
     // normalized is GL_FALSE because we don't want the values to be normalized
     // stride is 2 * sizeof(float) because each vertex is 2 floats
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
+
+    // Create an index buffer object (ibo) to store the indices
+    unsigned int ibo;
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * 2 * sizeof(unsigned int), &indices, GL_STATIC_DRAW);
 
     // Load shaders
     Shader shader("shaders/vertex/vertex.glsl", "shaders/fragment/fragment.glsl");
@@ -114,7 +127,8 @@ int main()
         glBindVertexArray(vao);
 
         // Draw the triangle
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
         // check and call events and swap the buffers
         glfwSwapBuffers(window);
