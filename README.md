@@ -14,3 +14,8 @@ make
 - [GLFW](https://www.glfw.org/)
 - [GLEW](http://glew.sourceforge.net/)
 - [OpenGL](https://www.opengl.org/)
+
+## Additional OpenGL Resources
+- [OpenGL Documentation](https://www.khronos.org/registry/OpenGL-Refpages/gl4/)
+- [OpenGL Tutorial](https://learnopengl.com/)
+- [docs.gl](https://docs.gl/)
